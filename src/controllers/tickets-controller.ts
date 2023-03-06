@@ -1,7 +1,21 @@
-import { AuthenticatedRequest } from "@/middlewares";
-import ticketService from "@/services/tickets-service";
-import { Response } from "express";
-import httpStatus from "http-status";
+import { AuthenticatedRequest } from '@/middlewares';
+import ticketService from '@/services/tickets-service';
+import { Response } from 'express';
+import httpStatus from 'http-status';
+
+export async function getTicketByEnrollmentId(req: AuthenticatedRequest, res: Response) {
+  const id = req.params.enrollmentId;
+
+  const enrollmentId = Number(id);
+
+  try {
+    const ticketByEnrollmentId = await ticketService.getTicketByEnrollmentId(enrollmentId);
+
+    return ticketByEnrollmentId.TicketType;
+  } catch (error) {
+    return res.sendStatus(httpStatus.NO_CONTENT);
+  }
+}
 
 export async function getTicketTypes(req: AuthenticatedRequest, res: Response) {
   try {
@@ -43,4 +57,3 @@ export async function createTicket(req: AuthenticatedRequest, res: Response) {
     return res.sendStatus(httpStatus.NOT_FOUND);
   }
 }
-
