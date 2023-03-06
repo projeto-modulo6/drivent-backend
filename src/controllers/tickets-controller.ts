@@ -5,7 +5,7 @@ import httpStatus from 'http-status';
 
 export async function getTicketByEnrollmentId(req: AuthenticatedRequest, res: Response) {
   const id = req.params.enrollmentId;
-
+  console.log('teste')
   const enrollmentId = Number(id);
 
   try {
