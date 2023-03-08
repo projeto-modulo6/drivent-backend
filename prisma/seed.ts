@@ -16,13 +16,9 @@ async function main() {
     });
   }
 
-<<<<<<< HEAD
-  console.log({ event });
-=======
   let types = await prisma.ticketType.findMany();
   let ticketTypes = {}
   if(types.length === 0){
-
     ticketTypes = await prisma.ticketType.createMany({
       data: [
         {
@@ -47,8 +43,29 @@ async function main() {
     })
   }
 
+  let hotels = await prisma.hotel.findMany();
+  let newHotels = {};
+  if(hotels.length === 0){
+    newHotels = await prisma.hotel.createMany({
+      data: [
+        {
+          name: 'Flamengo Resort',
+          image: 'https://i2.wp.com/blogchicosoares.com/wp-content/uploads/2021/12/FLA.jpg?fit=636%2C371&ssl=1'
+        },
+        {
+          name: 'Flamengo Palace',
+          image: 'http://multirio.rio.rj.gov.br/images/img_2017_02/rep200.jpg'
+        },
+        {
+          name: 'Flamengo World',
+          image: 'https://pbs.twimg.com/media/Fpbn9amXEAwiABT.jpg'
+        }
+      ]
+    })
+  }
+
   console.log({ event }, " ", ticketTypes);
->>>>>>> 971928b70ee3e0c980d025c6232cf26ab5a35e43
+
 }
 
 main()
