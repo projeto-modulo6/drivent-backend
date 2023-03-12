@@ -1,6 +1,6 @@
-import { prisma } from '@/config';
-import redis from '@/config/databaseCache';
-import { Hotel, Room } from '@prisma/client';
+import { prisma } from "@/config";
+import redis from "@/config/databaseCache";
+import { Hotel, Room } from "@prisma/client";
 
 async function findHotels() {
   const expiration: number = Number(process.env.REDIS_EXPIRATION);
@@ -28,6 +28,21 @@ async function findRoomsByHotelId(hotelId: number) {
   return data;
 }
 
+async function getHotelBookings(hotelId: number) {
+  return prisma.room.findMany({
+    where: {
+      hotelId: hotelId,
+    },
+    include: {
+      _count: {
+        select: {
+          Booking: true,
+        },
+      },
+    },
+  });
+}
+
 async function findRoomsByHotelIdCache(hotelId: number): Promise<Hotel & { Rooms: Room[] }> {
   const cacheHotel = await redis.get(`hotel-hotelId-${hotelId}`);
   return JSON.parse(cacheHotel);
@@ -38,6 +53,7 @@ const hotelRepository = {
   findHotelsCache,
   findRoomsByHotelId,
   findRoomsByHotelIdCache,
+  getHotelBookings,
 };
 
 export default hotelRepository;
