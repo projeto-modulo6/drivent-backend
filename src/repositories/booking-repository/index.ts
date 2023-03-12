@@ -15,6 +15,7 @@ async function create({ roomId, userId }: CreateParams): Promise<Booking> {
 }
 
 async function findByRoomId(roomId: number) {
+  const expiration: number = Number(process.env.REDIS_EXPIRATION);
   const data = await prisma.booking.findMany({
     where: {
       roomId,
@@ -24,16 +25,17 @@ async function findByRoomId(roomId: number) {
     },
   });
 
-  redis.setEx(`boking-roomId-${roomId}`, 600, JSON.stringify(data));
+  redis.setEx(`booking-roomId-${roomId}`, expiration, JSON.stringify(data));
   return data;
 }
 
-async function findByRoomIdCache(roomId: number): Promise<Booking & { Room: Room }> {
-  const cacheBooking = await redis.get(`boking-roomId-${roomId}`);
+async function findByRoomIdCache(roomId: number): Promise<(Booking & { Room: Room })[]> {
+  const cacheBooking = await redis.get(`booking-roomId-${roomId}`);
   return JSON.parse(cacheBooking);
 }
 
 async function findByUserId(userId: number) {
+  const expiration: number = Number(process.env.REDIS_EXPIRATION);
   const data = await prisma.booking.findFirst({
     where: {
       userId,
@@ -43,12 +45,12 @@ async function findByUserId(userId: number) {
     },
   });
 
-  redis.setEx(`boking-userId-${userId}`, 600, JSON.stringify(data));
+  redis.setEx(`booking-userId-${userId}`, expiration, JSON.stringify(data));
   return data;
 }
 
 async function findByUserIdCache(userId: number): Promise<Booking & { Room: Room }> {
-  const cacheBooking = await redis.get(`boking-userId-${userId}`);
+  const cacheBooking = await redis.get(`booking-userId-${userId}`);
   return JSON.parse(cacheBooking);
 }
 
@@ -70,6 +72,7 @@ async function upsertBooking({ id, roomId, userId }: UpdateParams) {
 const bookingRepository = {
   create,
   findByRoomId,
+  findByRoomIdCache,
   findByUserId,
   findByUserIdCache,
   upsertBooking,

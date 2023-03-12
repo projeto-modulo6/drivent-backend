@@ -3,8 +3,9 @@ import redis from '@/config/databaseCache';
 import { Hotel, Room } from '@prisma/client';
 
 async function findHotels() {
+  const expiration: number = Number(process.env.REDIS_EXPIRATION);
   const data = await prisma.hotel.findMany();
-  redis.setEx(`hotel`, 600, JSON.stringify(data));
+  redis.setEx(`hotel`, expiration, JSON.stringify(data));
   return data;
 }
 
@@ -14,6 +15,7 @@ async function findHotelsCache(): Promise<Hotel[]> {
 }
 
 async function findRoomsByHotelId(hotelId: number) {
+  const expiration: number = Number(process.env.REDIS_EXPIRATION);
   const data = await prisma.hotel.findFirst({
     where: {
       id: hotelId,
@@ -22,7 +24,7 @@ async function findRoomsByHotelId(hotelId: number) {
       Rooms: true,
     },
   });
-  redis.setEx(`hotel-hotelId-${hotelId}`, 600, JSON.stringify(data));
+  redis.setEx(`hotel-hotelId-${hotelId}`, expiration, JSON.stringify(data));
   return data;
 }
 

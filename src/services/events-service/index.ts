@@ -5,15 +5,13 @@ import { Event } from '@prisma/client';
 import dayjs from 'dayjs';
 
 async function getFirstEvent(): Promise<GetFirstEventResult> {
-  const cache = await eventRepository.findFirstCache();
-  if (cache) {
-    return exclude(cache, 'createdAt', 'updatedAt');
-  } else {
-    const event = await eventRepository.findFirst();
-    if (!event) throw notFoundError();
-
-    return exclude(event, 'createdAt', 'updatedAt');
+  let event = await eventRepository.findFirstCache();
+  if (!event) {
+    event = await eventRepository.findFirst();
   }
+  if (!event) throw notFoundError();
+
+  return exclude(event, 'createdAt', 'updatedAt');
 }
 
 export type GetFirstEventResult = Omit<Event, 'createdAt' | 'updatedAt'>;

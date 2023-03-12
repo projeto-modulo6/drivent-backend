@@ -3,8 +3,9 @@ import redis from '@/config/databaseCache';
 import { Enrollment, Ticket, TicketStatus, TicketType } from '@prisma/client';
 
 async function findTicketTypes() {
+  const expiration: number = Number(process.env.REDIS_EXPIRATION);
   const data = await prisma.ticketType.findMany();
-  redis.setEx(`ticketType`, 600, JSON.stringify(data));
+  redis.setEx(`ticketType`, expiration, JSON.stringify(data));
   return data;
 }
 
@@ -14,6 +15,7 @@ async function findTicketTypesCache(): Promise<TicketType[]> {
 }
 
 async function findTickeyById(ticketId: number) {
+  const expiration: number = Number(process.env.REDIS_EXPIRATION);
   const data = await prisma.ticket.findFirst({
     where: {
       id: ticketId,
@@ -22,7 +24,7 @@ async function findTickeyById(ticketId: number) {
       Enrollment: true,
     },
   });
-  redis.setEx(`ticket-ticketId-${ticketId}`, 600, JSON.stringify(data));
+  redis.setEx(`ticket-ticketId-${ticketId}`, expiration, JSON.stringify(data));
   return data;
 }
 
@@ -32,6 +34,7 @@ async function findTickeyByIdCache(ticketId: number): Promise<Ticket & { Enrollm
 }
 
 async function findTickeWithTypeById(ticketId: number) {
+  const expiration: number = Number(process.env.REDIS_EXPIRATION);
   const data = await prisma.ticket.findFirst({
     where: {
       id: ticketId,
@@ -40,7 +43,7 @@ async function findTickeWithTypeById(ticketId: number) {
       TicketType: true,
     },
   });
-  redis.setEx(`ticketWithType-ticketId-${ticketId}`, 600, JSON.stringify(data));
+  redis.setEx(`ticketWithType-ticketId-${ticketId}`, expiration, JSON.stringify(data));
   return data;
 }
 
@@ -50,6 +53,7 @@ async function findTickeWithTypeByIdCache(ticketId: number): Promise<Ticket & { 
 }
 
 async function findTicketByEnrollmentId(enrollmentId: number) {
+  const expiration: number = Number(process.env.REDIS_EXPIRATION);
   const data = await prisma.ticket.findFirst({
     where: {
       enrollmentId,
@@ -58,7 +62,7 @@ async function findTicketByEnrollmentId(enrollmentId: number) {
       TicketType: true, //inner join
     },
   });
-  redis.setEx(`ticket-enrollmentId-${enrollmentId}`, 600, JSON.stringify(data));
+  redis.setEx(`ticket-enrollmentId-${enrollmentId}`, expiration, JSON.stringify(data));
   return data;
 }
 

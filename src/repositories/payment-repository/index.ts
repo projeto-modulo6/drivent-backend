@@ -3,12 +3,13 @@ import redis from '@/config/databaseCache';
 import { Payment } from '@prisma/client';
 
 async function findPaymentByTicketId(ticketId: number) {
+  const expiration: number = Number(process.env.REDIS_EXPIRATION);
   const data = await prisma.payment.findFirst({
     where: {
       ticketId,
     },
   });
-  redis.setEx(`payment-ticketId-${ticketId}`, 600, JSON.stringify(data));
+  redis.setEx(`payment-ticketId-${ticketId}`, expiration, JSON.stringify(data));
   return data;
 }
 

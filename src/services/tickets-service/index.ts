@@ -4,7 +4,10 @@ import enrollmentRepository from '@/repositories/enrollment-repository';
 import { TicketStatus } from '@prisma/client';
 
 async function getTicketTypes() {
-  const ticketTypes = await ticketRepository.findTicketTypes();
+  let ticketTypes = await ticketRepository.findTicketTypesCache();
+  if (!ticketTypes) {
+    ticketTypes = await ticketRepository.findTicketTypes();
+  }
 
   if (!ticketTypes) {
     throw notFoundError();
@@ -13,7 +16,10 @@ async function getTicketTypes() {
 }
 
 async function getTicketByUserId(userId: number) {
-  const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
+  let enrollment = await enrollmentRepository.findWithAddressByUserIdCache(userId);
+  if (!enrollment) {
+    enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
+  }
   if (!enrollment) {
     throw notFoundError();
   }
@@ -42,7 +48,10 @@ async function getTicketByEnrollmentId(enrollmentId: number) {
 }
 
 async function createTicket(userId: number, ticketTypeId: number) {
-  const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
+  let enrollment = await enrollmentRepository.findWithAddressByUserIdCache(userId);
+  if (!enrollment) {
+    enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
+  }
   if (!enrollment) {
     throw notFoundError();
   }
