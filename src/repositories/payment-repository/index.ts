@@ -1,12 +1,20 @@
-import { prisma } from "@/config";
-import { Payment } from "@prisma/client";
+import { prisma } from '@/config';
+import redis from '@/config/databaseCache';
+import { Payment } from '@prisma/client';
 
 async function findPaymentByTicketId(ticketId: number) {
-  return prisma.payment.findFirst({
+  const data = await prisma.payment.findFirst({
     where: {
       ticketId,
-    }
+    },
   });
+  redis.setEx(`payment-ticketId-${ticketId}`, 600, JSON.stringify(data));
+  return data;
+}
+
+async function findPaymentByTicketIdCache(ticketId: number): Promise<Payment> {
+  const cachePayment = await redis.get(`payment-ticketId-${ticketId}`);
+  return JSON.parse(cachePayment);
 }
 
 async function createPayment(ticketId: number, params: PaymentParams) {
@@ -14,14 +22,15 @@ async function createPayment(ticketId: number, params: PaymentParams) {
     data: {
       ticketId,
       ...params,
-    }
+    },
   });
 }
 
-export type PaymentParams = Omit<Payment, "id" | "createdAt" | "updatedAt">
+export type PaymentParams = Omit<Payment, 'id' | 'createdAt' | 'updatedAt'>;
 
 const paymentRepository = {
   findPaymentByTicketId,
+  findPaymentByTicketIdCache,
   createPayment,
 };
 
