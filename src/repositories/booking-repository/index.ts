@@ -1,9 +1,9 @@
-import { prisma } from '@/config';
-import redis from '@/config/databaseCache';
-import { Booking, Room } from '@prisma/client';
+import { prisma } from "@/config";
+import redis from "@/config/databaseCache";
+import { Booking, Room } from "@prisma/client";
 
-type CreateParams = Omit<Booking, 'id' | 'createdAt' | 'updatedAt'>;
-type UpdateParams = Omit<Booking, 'createdAt' | 'updatedAt'>;
+type CreateParams = Omit<Booking, "id" | "createdAt" | "updatedAt">;
+type UpdateParams = Omit<Booking, "createdAt" | "updatedAt">;
 
 async function create({ roomId, userId }: CreateParams): Promise<Booking> {
   return prisma.booking.create({
