@@ -91,7 +91,9 @@ async function ticketProcessPayment(ticketId: number) {
   });
 
   const key = await redis.keys(`*ticketId-${ticketId}*`);
-  redis.unlink(key);
+  if (key.length) {
+    redis.unlink(key);
+  }
   return data;
 }
 

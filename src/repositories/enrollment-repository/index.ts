@@ -50,7 +50,9 @@ async function upsert(
   });
 
   const key = await redis.keys(`*enrollmentId-${data.id}*`);
-  redis.unlink(key);
+  if (key.length) {
+    redis.unlink(key);
+  }
   return data;
 }
 

@@ -69,7 +69,9 @@ async function upsertBooking({ id, roomId, userId }: UpdateParams) {
     },
   });
   const key = await redis.keys(`*bookingId-${data.id}*`);
-  redis.unlink(key);
+  if (key.length) {
+    redis.unlink(key);
+  }
   redis.del(`booking-roomId-${roomId}`);
   return data;
 }
