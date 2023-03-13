@@ -1,6 +1,6 @@
-import { prisma } from '@/config';
-import redis from '@/config/databaseCache';
-import { Address, Enrollment } from '@prisma/client';
+import { prisma } from "@/config";
+import redis from "@/config/databaseCache";
+import { Address, Enrollment } from "@prisma/client";
 
 async function findWithAddressByUserId(userId: number) {
   const expiration: number = Number(process.env.REDIS_EXPIRATION);
@@ -11,13 +11,13 @@ async function findWithAddressByUserId(userId: number) {
     },
   });
 
-  redis.setEx(`enrollment-userId-${userId}`, expiration, JSON.stringify(data));
+  await redis.setEx(`enrollment-userId-${userId}`, expiration, JSON.stringify(data));
   return data;
 }
 
 async function findWithAddressByUserIdCache(userId: number): Promise<Enrollment & { Address: Address[] }> {
-  const key = await redis.keys(`enrollment*userId-${userId}`);
-  const cacheEnrollment = await redis.get(key[0]);
+  const key = (await redis.keys(`enrollment*userId-${userId}`))[0];
+  const cacheEnrollment = await redis.get(String(key));
   return JSON.parse(cacheEnrollment);
 }
 
@@ -32,9 +32,8 @@ async function findById(enrollmentId: number) {
 }
 
 async function findByIdCache(enrollmentId: number): Promise<Enrollment> {
-  const key = await redis.keys(`enrollment*enrollmentId-${enrollmentId}`);
-  console.log(key);
-  const cacheEnrollment = await redis.get(`enrollment-enrollmentId-${enrollmentId}`);
+  const key = (await redis.keys(`enrollment*enrollmentId-${enrollmentId}`))[0];
+  const cacheEnrollment = await redis.get(String(key));
   return JSON.parse(cacheEnrollment);
 }
 
@@ -52,8 +51,8 @@ async function upsert(
   });
 }
 
-export type CreateEnrollmentParams = Omit<Enrollment, 'id' | 'createdAt' | 'updatedAt'>;
-export type UpdateEnrollmentParams = Omit<CreateEnrollmentParams, 'userId'>;
+export type CreateEnrollmentParams = Omit<Enrollment, "id" | "createdAt" | "updatedAt">;
+export type UpdateEnrollmentParams = Omit<CreateEnrollmentParams, "userId">;
 
 const enrollmentRepository = {
   findWithAddressByUserId,
