@@ -45,17 +45,18 @@ async function findByUserId(userId: number) {
     },
   });
 
-  redis.setEx(`booking-userId-${userId}`, expiration, JSON.stringify(data));
+  redis.setEx(`bookingId-${data.id}-userId-${userId}`, expiration, JSON.stringify(data));
   return data;
 }
 
 async function findByUserIdCache(userId: number): Promise<Booking & { Room: Room }> {
-  const cacheBooking = await redis.get(`booking-userId-${userId}`);
+  const key = (await redis.keys(`booking*userId-${userId}`))[0];
+  const cacheBooking = await redis.get(String(key));
   return JSON.parse(cacheBooking);
 }
 
 async function upsertBooking({ id, roomId, userId }: UpdateParams) {
-  return prisma.booking.upsert({
+  const data = await prisma.booking.upsert({
     where: {
       id,
     },
@@ -67,6 +68,10 @@ async function upsertBooking({ id, roomId, userId }: UpdateParams) {
       roomId,
     },
   });
+  const key = await redis.keys(`*bookingId-${data.id}*`);
+  redis.unlink(key);
+  redis.del(`booking-roomId-${roomId}`);
+  return data;
 }
 
 const bookingRepository = {

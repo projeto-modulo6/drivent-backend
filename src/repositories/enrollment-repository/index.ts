@@ -11,7 +11,7 @@ async function findWithAddressByUserId(userId: number) {
     },
   });
 
-  await redis.setEx(`enrollment-userId-${userId}`, expiration, JSON.stringify(data));
+  await redis.setEx(`enrollmentId-${data.id}-userId-${userId}`, expiration, JSON.stringify(data));
   return data;
 }
 
@@ -27,13 +27,12 @@ async function findById(enrollmentId: number) {
     where: { id: enrollmentId },
   });
 
-  redis.setEx(`enrollment-enrollmentId-${enrollmentId}`, expiration, JSON.stringify(data));
+  redis.setEx(`enrollmentId-${enrollmentId}`, expiration, JSON.stringify(data));
   return data;
 }
 
 async function findByIdCache(enrollmentId: number): Promise<Enrollment> {
-  const key = (await redis.keys(`enrollment*enrollmentId-${enrollmentId}`))[0];
-  const cacheEnrollment = await redis.get(String(key));
+  const cacheEnrollment = await redis.get(`enrollmentId-${enrollmentId}`);
   return JSON.parse(cacheEnrollment);
 }
 
@@ -42,13 +41,17 @@ async function upsert(
   createdEnrollment: CreateEnrollmentParams,
   updatedEnrollment: UpdateEnrollmentParams,
 ) {
-  return prisma.enrollment.upsert({
+  const data = await prisma.enrollment.upsert({
     where: {
       userId,
     },
     create: createdEnrollment,
     update: updatedEnrollment,
   });
+
+  const key = await redis.keys(`*enrollmentId-${data.id}*`);
+  redis.unlink(key);
+  return data;
 }
 
 export type CreateEnrollmentParams = Omit<Enrollment, "id" | "createdAt" | "updatedAt">;
