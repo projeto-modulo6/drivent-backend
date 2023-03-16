@@ -9,9 +9,6 @@ async function getActivityById(activityId: number){
     return activity;
 }
 
-
-
-
 const activityService = {
     getActivityById
   };
