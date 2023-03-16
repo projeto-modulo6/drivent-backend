@@ -23,9 +23,9 @@ export async function getActivityById(req: AuthenticatedRequest, res: Response){
 }
 
 export async function getUserActivityByActivityId(req: AuthenticatedRequest, res: Response){
-    const { id } = req.query;
+    const { activityId } = req.query;
     try {
-        const userActivities = await activityService.getUserActivitiesByActivityId(Number(id));
+        const userActivities = await activityService.getUserActivitiesByActivityId(Number(activityId));
         return res.status(httpStatus.OK).send(userActivities);
     } catch (error) {
         return res.sendStatus(httpStatus.NOT_FOUND);

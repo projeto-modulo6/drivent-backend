@@ -8,6 +8,6 @@ activitiesRouter
 .all('/*', authenticateToken)
 .get('/', getActivities)
 .get('/:activityId', getActivityById)
-.get('/:id', getUserActivityByActivityId)
+.get('/useractivity/:activityId', getUserActivityByActivityId)
 
 export { activitiesRouter };
