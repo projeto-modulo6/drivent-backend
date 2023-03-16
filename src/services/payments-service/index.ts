@@ -4,12 +4,18 @@ import ticketRepository from "@/repositories/ticket-repository";
 import enrollmentRepository from "@/repositories/enrollment-repository";
 
 async function verifyTicketAndEnrollment(ticketId: number, userId: number) {
-  const ticket = await ticketRepository.findTickeyById(ticketId);
+  let ticket = await ticketRepository.findTickeyByIdCache(ticketId);
+  if (!ticket) {
+    ticket = await ticketRepository.findTickeyById(ticketId);
+  }
 
   if (!ticket) {
     throw notFoundError();
   }
-  const enrollment = await enrollmentRepository.findById(ticket.enrollmentId);
+  let enrollment = await enrollmentRepository.findByIdCache(ticket.enrollmentId);
+  if (!enrollment) {
+    enrollment = await enrollmentRepository.findById(ticket.enrollmentId);
+  }
 
   if (enrollment.userId !== userId) {
     throw unauthorizedError();
@@ -19,7 +25,10 @@ async function verifyTicketAndEnrollment(ticketId: number, userId: number) {
 async function getPaymentByTicketId(userId: number, ticketId: number) {
   await verifyTicketAndEnrollment(ticketId, userId);
 
-  const payment = await paymentRepository.findPaymentByTicketId(ticketId);
+  let payment = await paymentRepository.findPaymentByTicketIdCache(ticketId);
+  if (!payment) {
+    payment = await paymentRepository.findPaymentByTicketId(ticketId);
+  }
 
   if (!payment) {
     throw notFoundError();
@@ -30,7 +39,10 @@ async function getPaymentByTicketId(userId: number, ticketId: number) {
 async function paymentProcess(ticketId: number, userId: number, cardData: CardPaymentParams) {
   await verifyTicketAndEnrollment(ticketId, userId);
 
-  const ticket = await ticketRepository.findTickeWithTypeById(ticketId);
+  let ticket = await ticketRepository.findTickeWithTypeByIdCache(ticketId);
+  if (!ticket) {
+    ticket = await ticketRepository.findTickeWithTypeById(ticketId);
+  }
 
   const paymentData = {
     ticketId,
@@ -47,12 +59,12 @@ async function paymentProcess(ticketId: number, userId: number, cardData: CardPa
 }
 
 export type CardPaymentParams = {
-  issuer: string,
-  number: number,
-  name: string,
-  expirationDate: Date,
-  cvv: number
-}
+  issuer: string;
+  number: number;
+  name: string;
+  expirationDate: Date;
+  cvv: number;
+};
 
 const paymentService = {
   getPaymentByTicketId,
