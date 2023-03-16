@@ -207,6 +207,60 @@ async function main() {
     })
   }
 
+  let rooms = await prisma.room.findFirst();
+  let newRooms = {};
+  if (!rooms){
+    newRooms = await prisma.room.createMany({
+      data:[
+        {
+          name: '1',
+          capacity: 1,
+          hotelId: 1
+        },
+        {
+          name: '2',
+          capacity: 2,
+          hotelId: 1
+        },
+        {
+          name: '3',
+          capacity: 3,
+          hotelId: 1
+        },
+        {
+          name: '1',
+          capacity: 1,
+          hotelId: 2
+        },
+        {
+          name: '2',
+          capacity: 2,
+          hotelId: 2
+        },
+        {
+          name: '3',
+          capacity: 3,
+          hotelId: 2
+        },
+        {
+          name: '1',
+          capacity: 1,
+          hotelId: 3
+        },
+        {
+          name: '2',
+          capacity: 2,
+          hotelId: 3
+        },
+        {
+          name: '3',
+          capacity: 3,
+          hotelId: 3
+        }
+      ]
+    })
+  }
+
   console.log({ event }, " ", ticketTypes);
 
 }
