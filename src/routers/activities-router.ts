@@ -1,4 +1,4 @@
-import { getActivities, getActivityById } from "@/controllers/activities-controller";
+import { getActivities, getActivityById, getUserActivityByActivityId } from "@/controllers/activities-controller";
 import { authenticateToken } from "@/middlewares";
 import { Router } from "express";
 
@@ -8,5 +8,6 @@ activitiesRouter
 .all('/*', authenticateToken)
 .get('/', getActivities)
 .get('/:activityId', getActivityById)
+.get('/:id', getUserActivityByActivityId)
 
 export { activitiesRouter };

@@ -21,3 +21,13 @@ export async function getActivityById(req: AuthenticatedRequest, res: Response){
         return res.sendStatus(httpStatus.NOT_FOUND);
     }
 }
+
+export async function getUserActivityByActivityId(req: AuthenticatedRequest, res: Response){
+    const { id } = req.query;
+    try {
+        const userActivities = await activityService.getUserActivitiesByActivityId(Number(id));
+        return res.status(httpStatus.OK).send(userActivities);
+    } catch (error) {
+        return res.sendStatus(httpStatus.NOT_FOUND);
+    }
+}

@@ -17,9 +17,18 @@ async function getActivityById(activityId: number){
     return activity;
 }
 
+async function getUserActivitiesByActivityId(activityId: number){
+    const userActivities = await activityRepository.findUserActivitiesByActivityId(activityId);
+    if(!userActivities){
+        throw notFoundError();
+    }
+    return userActivities;
+}
+
 const activityService = {
     getActivityById,
-    getActivities
+    getActivities,
+    getUserActivitiesByActivityId
   };
   
   export default activityService;

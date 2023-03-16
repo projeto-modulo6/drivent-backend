@@ -14,9 +14,19 @@ async function findActivityById(activityId: number){
     return data;
 }
 
+async function findUserActivitiesByActivityId(activityId: number){
+    const data = await prisma.user_activity.findMany({
+        where:{
+            id: activityId
+        }
+    })
+    return data;
+}
+
 const activityRepository = {
     findActivityById,
-    findActivities
+    findActivities,
+    findUserActivitiesByActivityId
 }
 
 export default activityRepository;
