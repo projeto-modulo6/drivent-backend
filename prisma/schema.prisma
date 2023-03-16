@@ -14,7 +14,7 @@ model User {
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   Booking       Booking[]
-  Enrollment    Enrollment?
+  Enrollment    Enrollment[]
   Session       Session[]
   user_activity user_activity[]
 }
@@ -49,7 +49,7 @@ model Enrollment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   User      User     @relation(fields: [userId], references: [id])
-  Address   Address?
+  Address   Address[]
   Ticket    Ticket[]
 }
 
@@ -133,22 +133,22 @@ model Booking {
 }
 
 model activity {
-  id            Int             @id(map: "Activity_pkey") @default(autoincrement())
+  id            Int             @id @default(autoincrement())
   name          String
   local_id      Int
   date_id       Int
+  begin         DateTime        @db.Timestamptz(6)
+  end           DateTime        @db.Timestamptz(6)
   seats         Int
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
-  begin         DateTime        
-  end           DateTime        
-  date_activity date_activity   @relation(fields: [date_id], references: [id], map: "Activity_date_id_fkey")
-  local         local           @relation(fields: [local_id], references: [id], map: "Activity_local_id_fkey")
+  date_activity date_activity   @relation(fields: [date_id], references: [id], map: "activity_date_activity_id_fkey")
+  local         local           @relation(fields: [local_id], references: [id])
   user_activity user_activity[]
 }
 
 model date_activity {
-  id        Int        @id(map: "Date_pkey") @default(autoincrement())
+  id        Int        @id @default(autoincrement())
   name      String
   date      DateTime   @db.Date
   createdAt DateTime   @default(now())
@@ -157,7 +157,7 @@ model date_activity {
 }
 
 model local {
-  id        Int        @id(map: "Local_pkey") @default(autoincrement())
+  id        Int        @id @default(autoincrement())
   name      String
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
@@ -165,13 +165,13 @@ model local {
 }
 
 model user_activity {
-  id          Int      @id(map: "User_Activity_pkey") @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   activity_id Int
   user_id     Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  activity    activity @relation(fields: [activity_id], references: [id], map: "User_Activity_activity_id_fkey")
-  User        User     @relation(fields: [user_id], references: [id], map: "User_Activity_user_id_fkey")
+  activity    activity @relation(fields: [activity_id], references: [id])
+  User        User     @relation(fields: [user_id], references: [id])
 }
 
 enum TicketStatus {
