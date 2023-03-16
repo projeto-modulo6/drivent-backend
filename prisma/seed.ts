@@ -186,7 +186,29 @@ async function main() {
     });
   }
 
+  let hotels = await prisma.hotel.findMany();
+  let newHotels = {};
+  if(hotels.length === 0){
+    newHotels = await prisma.hotel.createMany({
+      data: [
+        {
+          name: 'Flamengo Resort',
+          image: 'https://i2.wp.com/blogchicosoares.com/wp-content/uploads/2021/12/FLA.jpg?fit=636%2C371&ssl=1'
+        },
+        {
+          name: 'Flamengo Palace',
+          image: 'http://multirio.rio.rj.gov.br/images/img_2017_02/rep200.jpg'
+        },
+        {
+          name: 'Flamengo World',
+          image: 'https://pbs.twimg.com/media/Fpbn9amXEAwiABT.jpg'
+        }
+      ]
+    })
+  }
+
   console.log({ event }, " ", ticketTypes);
+
 }
 
 main()
