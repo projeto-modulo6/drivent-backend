@@ -1,6 +1,6 @@
 import { AuthenticatedRequest } from "@/middlewares";
 import activityService from "@/services/activities-service";
-import { Response } from "express";
+import { query, Response } from "express";
 import httpStatus from "http-status";
 
 export async function getActivityById(req: AuthenticatedRequest, res: Response) {
@@ -13,10 +13,10 @@ export async function getActivityById(req: AuthenticatedRequest, res: Response) 
   }
 }
 
-export async function getAllDatesWithActivities(req: AuthenticatedRequest, res: Response) {
+export async function getAllDates(req: AuthenticatedRequest, res: Response) {
   try {
-    const activity = await activityService.getDateWithActivities();
-    return res.status(httpStatus.OK).send(activity);
+    const dates = await activityService.getDates();
+    return res.status(httpStatus.OK).send(dates);
   } catch (error) {
     return res.sendStatus(httpStatus.NOT_FOUND);
   }

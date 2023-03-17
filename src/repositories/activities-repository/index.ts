@@ -18,7 +18,7 @@ async function findAllDates() {
   return data;
 }
 
-async function findAllLocalsWithActivity(id: number) {
+async function findAllLocalsWithActivity(dateId: number, userId: number) {
   const data = await prisma.local.findMany({
     include: {
       activity: {
@@ -28,9 +28,12 @@ async function findAllLocalsWithActivity(id: number) {
               user_activity: true,
             },
           },
+          user_activity: {
+            where: { id: userId },
+          },
         },
         where: {
-          date_id: id,
+          date_id: dateId,
         },
         orderBy: {
           begin: "asc",
