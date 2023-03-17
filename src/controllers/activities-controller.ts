@@ -12,3 +12,4 @@ export async function getActivityById(req: AuthenticatedRequest, res: Response){
         return res.sendStatus(httpStatus.NOT_FOUND);
     }
 }
+
