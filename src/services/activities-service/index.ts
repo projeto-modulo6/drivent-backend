@@ -10,28 +10,26 @@ async function getActivityById(activityId: number) {
   return activity;
 }
 
-async function getDateWithActivities() {
-  const activity = await activityRepository.findAllDates();
-  if (!activity.length) {
+async function getDates() {
+  const dates = await activityRepository.findAllDates();
+  if (!dates.length) {
     throw notFoundError();
   }
-  let date: date_activity_with_local[] = [];
-  for (let i = 0; i < activity.length; i++) {
-    let locals = await activityRepository.findAllLocalsWithActivity(activity[i].id);
-    date.push({
-      ...activity[i],
-      local: locals,
-    });
-  }
-  return date;
+  return dates;
 }
 
-type Local_With_Activity = { local: local[] };
-type date_activity_with_local = date_activity & Local_With_Activity;
+async function getLocalsWithActivities(dateId: number, userId: number) {
+  let locals = await activityRepository.findAllLocalsWithActivity(dateId, userId);
+  if (!locals.length) {
+    throw notFoundError();
+  }
+  return locals;
+}
 
 const activityService = {
   getActivityById,
-  getDateWithActivities,
+  getDates,
+  getLocalsWithActivities,
 };
 
 export default activityService;
