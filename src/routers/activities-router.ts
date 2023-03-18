@@ -12,8 +12,8 @@ const activitiesRouter = Router();
 activitiesRouter
   .all("/*", authenticateToken)
   .get("/dates", getAllDates)
-  .get("/:activityId", getActivityById)
   .get("/locale/:dayId/:localeId", getDayActivitiesByLocale)
-  .get("/allLocales", getAllLocales);
+  .get("/allLocales", getAllLocales)
+  .get("/:activityId", getActivityById);
 
 export { activitiesRouter };
