@@ -44,10 +44,20 @@ async function findAllLocalsWithActivity(dateId: number, userId: number) {
   return data;
 }
 
+async function findActivitiesByDayAndLocale(dateId: number, localeId: number) {
+  return prisma.activity.findMany({
+    where: {
+      local_id: localeId,
+      date_id: dateId,
+    },
+  });
+}
+
 const activityRepository = {
   findActivityById,
   findAllDates,
   findAllLocalsWithActivity,
+  findActivitiesByDayAndLocale,
 };
 
 export default activityRepository;
