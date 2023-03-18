@@ -34,3 +34,12 @@ export async function getDayActivitiesByLocale(req: AuthenticatedRequest, res: R
     return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
   }
 }
+
+export async function getAllLocales(req: AuthenticatedRequest, res: Response) {
+  try {
+    const locales = await activityService.getLocales();
+    return res.status(httpStatus.OK).send(locales);
+  } catch (err) {
+    return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+  }
+}
