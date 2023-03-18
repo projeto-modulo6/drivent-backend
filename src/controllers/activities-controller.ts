@@ -21,3 +21,16 @@ export async function getAllDates(req: AuthenticatedRequest, res: Response) {
     return res.sendStatus(httpStatus.NOT_FOUND);
   }
 }
+
+export async function getDayActivitiesByLocale(req: AuthenticatedRequest, res: Response) {
+  const { dayId, localeId } = req.params;
+  try {
+    const activities = await activityService.getDayActivitiesByLocale(Number(dayId), Number(localeId));
+    return res.status(httpStatus.OK).send(activities);
+  } catch (err) {
+    if (err.name === "RequestError") {
+      return res.status(httpStatus.BAD_REQUEST).send(err.message);
+    }
+    return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+  }
+}
