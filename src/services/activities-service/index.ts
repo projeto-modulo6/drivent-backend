@@ -1,4 +1,4 @@
-import { notFoundError, invalidDataError } from "@/errors";
+import { notFoundError, invalidDataError, conflictError, requestError } from "@/errors";
 import activityRepository from "@/repositories/activities-repository";
 
 async function getActivityById(activityId: number) {
@@ -7,6 +7,30 @@ async function getActivityById(activityId: number) {
     throw notFoundError();
   }
   return activity;
+}
+
+async function creatingUserActivity(userId: number, activityId: number){
+
+  const verifyByUserId = await activityRepository.findUserActivityByUserId(userId);
+
+  if(verifyByUserId){
+    throw conflictError("This user is already registered with this activity")
+  }
+
+  const verifyActivity = await activityRepository.findActivityById(activityId);
+
+  if(!verifyActivity){
+    throw notFoundError()
+  }
+
+  const createUserActivity = await activityRepository.createUserActivity(userId, activityId);
+
+  if(!createUserActivity){
+    throw requestError(400, "Bad Request")
+  }
+
+  return createUserActivity
+
 }
 
 async function getDates() {
@@ -39,6 +63,7 @@ const activityService = {
   getDates,
   getLocalsWithActivities,
   getDayActivitiesByLocale,
+  creatingUserActivity
 };
 
 export default activityService;

@@ -34,3 +34,24 @@ export async function getDayActivitiesByLocale(req: AuthenticatedRequest, res: R
     return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
   }
 }
+
+export async function createUserActivity(req: AuthenticatedRequest, res: Response){
+
+  const { userId } = req;
+
+  const { activityId } = req.params;
+
+  try {
+    const create = await activityService.creatingUserActivity(Number(userId), Number(activityId));
+    return res.status(httpStatus.OK).send(create.id)
+  } catch (error) {
+    if(error.name === "ConflictError"){
+      return res.status(httpStatus.CONFLICT).send(error.message)
+    };
+    if(error.name === "NotFoundError"){
+      return res.status(httpStatus.NOT_FOUND).send(error.message)
+    }
+    return res.status(httpStatus.BAD_REQUEST).send(error.message)
+  }
+
+}

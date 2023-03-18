@@ -3,7 +3,7 @@ import { user_activity } from "@prisma/client";
 
 type CreateParams = Omit<user_activity, "id" | "createdAt" | "updatedAt">;
 
-async function createUserActivity({activity_id, user_id}: CreateParams): Promise<user_activity>{
+async function createUserActivity(user_id: number, activity_id: number){
 
     return await prisma.user_activity.create({
         data: {
@@ -11,6 +11,15 @@ async function createUserActivity({activity_id, user_id}: CreateParams): Promise
             user_id
         }
     })
+}
+
+async function findUserActivityByUserId(userId: number){
+
+  return await prisma.user_activity.findFirst({
+    where:{
+      user_id: userId
+    }
+  })
 
 }
 
@@ -72,6 +81,8 @@ const activityRepository = {
   findAllDates,
   findAllLocalsWithActivity,
   findActivitiesByDayAndLocale,
+  createUserActivity,
+  findUserActivityByUserId
 };
 
 export default activityRepository;
