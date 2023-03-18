@@ -14,7 +14,7 @@ model User {
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   Booking       Booking[]
-  Enrollment    Enrollment?
+  Enrollment    Enrollment[]
   Session       Session[]
   user_activity user_activity[]
 }
@@ -49,7 +49,7 @@ model Enrollment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   User      User     @relation(fields: [userId], references: [id])
-  Address   Address?
+  Address   Address[]
   Ticket    Ticket[]
 }
 
@@ -61,7 +61,7 @@ model Address {
   state         String     @db.VarChar(255)
   number        String     @db.VarChar(255)
   neighborhood  String     @db.VarChar(255)
-  addressDetail String?    @db.VarChar(255)
+  addressDetail String[]    @db.VarChar(255)
   enrollmentId  Int        @unique
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
