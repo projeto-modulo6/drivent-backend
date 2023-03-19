@@ -1,18 +1,5 @@
 import { prisma } from "@/config";
-import { user_activity } from "@prisma/client";
-
-type CreateParams = Omit<user_activity, "id" | "createdAt" | "updatedAt">;
-
-async function createUserActivity({activity_id, user_id}: CreateParams): Promise<user_activity>{
-
-    return await prisma.user_activity.create({
-        data: {
-            activity_id,
-            user_id
-        }
-    })
-
-}
+import { activity, local } from "@prisma/client";
 
 async function findActivityById(activityId: number) {
   const data = await prisma.activity.findFirst({
@@ -30,6 +17,14 @@ async function findAllDates() {
     },
   });
   return data;
+}
+
+async function findAllLocales(): Promise<local[]> {
+  return await prisma.local.findMany({
+    orderBy: {
+      id: "asc",
+    },
+  });
 }
 
 async function findAllLocalsWithActivity(dateId: number, userId: number) {
@@ -58,7 +53,7 @@ async function findAllLocalsWithActivity(dateId: number, userId: number) {
   return data;
 }
 
-async function findActivitiesByDayAndLocale(dateId: number, localeId: number) {
+async function findActivitiesByDayAndLocale(dateId: number, localeId: number): Promise<activity[]> {
   return prisma.activity.findMany({
     where: {
       local_id: localeId,
@@ -72,6 +67,7 @@ const activityRepository = {
   findAllDates,
   findAllLocalsWithActivity,
   findActivitiesByDayAndLocale,
+  findAllLocales,
 };
 
 export default activityRepository;

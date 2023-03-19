@@ -1,5 +1,6 @@
 import { notFoundError, invalidDataError } from "@/errors";
 import activityRepository from "@/repositories/activities-repository";
+import { activity, local } from "@prisma/client";
 
 async function getActivityById(activityId: number) {
   const activity = await activityRepository.findActivityById(activityId);
@@ -25,7 +26,7 @@ async function getLocalsWithActivities(dateId: number, userId: number) {
   return locals;
 }
 
-async function getDayActivitiesByLocale(dayId: number, localeId: number) {
+async function getDayActivitiesByLocale(dayId: number, localeId: number): Promise<activity[]> {
   if (!Number(dayId) || !Number(localeId)) {
     throw invalidDataError(["Bad Request"]);
   }
@@ -34,11 +35,17 @@ async function getDayActivitiesByLocale(dayId: number, localeId: number) {
   return activities;
 }
 
+async function getLocales(): Promise<local[]> {
+  const locales = await activityRepository.findAllLocales();
+  return locales;
+}
+
 const activityService = {
   getActivityById,
   getDates,
   getLocalsWithActivities,
   getDayActivitiesByLocale,
+  getLocales,
 };
 
 export default activityService;
