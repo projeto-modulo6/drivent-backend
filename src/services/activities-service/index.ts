@@ -69,7 +69,8 @@ const activityService = {
   getDates,
   getLocalsWithActivities,
   getDayActivitiesByLocale,
-  creatingUserActivity
+  creatingUserActivity,
+  getLocales
 };
 
 export default activityService;
