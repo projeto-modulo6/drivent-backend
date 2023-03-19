@@ -188,81 +188,158 @@ async function main() {
 
   let hotels = await prisma.hotel.findMany();
   let newHotels = {};
-  if(hotels.length === 0){
+  if (hotels.length === 0) {
     newHotels = await prisma.hotel.createMany({
       data: [
         {
-          name: 'Flamengo Resort',
-          image: 'https://i2.wp.com/blogchicosoares.com/wp-content/uploads/2021/12/FLA.jpg?fit=636%2C371&ssl=1'
+          name: "Flamengo Resort",
+          image: "https://i2.wp.com/blogchicosoares.com/wp-content/uploads/2021/12/FLA.jpg?fit=636%2C371&ssl=1",
         },
         {
-          name: 'Flamengo Palace',
-          image: 'http://multirio.rio.rj.gov.br/images/img_2017_02/rep200.jpg'
+          name: "Flamengo Palace",
+          image: "http://multirio.rio.rj.gov.br/images/img_2017_02/rep200.jpg",
         },
         {
-          name: 'Flamengo World',
-          image: 'https://pbs.twimg.com/media/Fpbn9amXEAwiABT.jpg'
-        }
-      ]
-    })
+          name: "Flamengo World",
+          image: "https://pbs.twimg.com/media/Fpbn9amXEAwiABT.jpg",
+        },
+      ],
+    });
   }
 
   let rooms = await prisma.room.findFirst();
   let newRooms = {};
-  if (!rooms){
+  if (!rooms) {
     newRooms = await prisma.room.createMany({
-      data:[
+      data: [
         {
-          name: '1',
+          name: "1",
           capacity: 1,
-          hotelId: 1
+          hotelId: 1,
         },
         {
-          name: '2',
+          name: "2",
           capacity: 2,
-          hotelId: 1
+          hotelId: 1,
         },
         {
-          name: '3',
+          name: "3",
           capacity: 3,
-          hotelId: 1
+          hotelId: 1,
         },
         {
-          name: '1',
+          name: "1",
           capacity: 1,
-          hotelId: 2
+          hotelId: 2,
         },
         {
-          name: '2',
+          name: "2",
           capacity: 2,
-          hotelId: 2
+          hotelId: 2,
         },
         {
-          name: '3',
+          name: "3",
           capacity: 3,
-          hotelId: 2
+          hotelId: 2,
         },
         {
-          name: '1',
+          name: "1",
           capacity: 1,
-          hotelId: 3
+          hotelId: 3,
         },
         {
-          name: '2',
+          name: "2",
           capacity: 2,
-          hotelId: 3
+          hotelId: 3,
         },
         {
-          name: '3',
+          name: "3",
           capacity: 3,
-          hotelId: 3
-        }
-      ]
-    })
+          hotelId: 3,
+        },
+      ],
+    });
+  }
+  async function newUserActFull() {
+    for (let i = 0; i < 30; i++) {
+      await prisma.user_activity.createMany({
+        data: [
+          {
+            activity_id: 4,
+            user_id: 1,
+          },
+        ],
+      });
+    }
+  }
+
+  let userActivities = await prisma.user_activity.findFirst();
+  let newUserActivities = {};
+  if (!userActivities) {
+    newUserActivities = await prisma.user_activity.createMany({
+      data: [
+        {
+          activity_id: 1,
+          user_id: 1,
+        },
+        {
+          activity_id: 1,
+          user_id: 1,
+        },
+        {
+          activity_id: 1,
+          user_id: 1,
+        },
+        {
+          activity_id: 1,
+          user_id: 1,
+        },
+        {
+          activity_id: 1,
+          user_id: 1,
+        },
+        {
+          activity_id: 1,
+          user_id: 1,
+        },
+        {
+          activity_id: 1,
+          user_id: 1,
+        },
+        {
+          activity_id: 2,
+          user_id: 1,
+        },
+        {
+          activity_id: 2,
+          user_id: 1,
+        },
+        {
+          activity_id: 2,
+          user_id: 1,
+        },
+        {
+          activity_id: 2,
+          user_id: 1,
+        },
+        {
+          activity_id: 3,
+          user_id: 1,
+        },
+        {
+          activity_id: 3,
+          user_id: 1,
+        },
+        {
+          activity_id: 3,
+          user_id: 1,
+        },
+      ],
+    });
+    newUserActFull();
   }
 
   console.log({ event }, " ", ticketTypes);
-
 }
 
 main()

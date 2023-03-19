@@ -40,12 +40,21 @@ async function getLocales(): Promise<local[]> {
   return locales;
 }
 
+async function getUserActivitiesByActivityId(activityId: number){
+    const userActivities = await activityRepository.findUserActivitiesByActivityId(Number(activityId));
+    if(!userActivities){
+        throw notFoundError();
+    }
+    return userActivities;
+}
+
 const activityService = {
   getActivityById,
   getDates,
   getLocalsWithActivities,
   getDayActivitiesByLocale,
   getLocales,
+  getUserActivitiesByActivityId
 };
 
 export default activityService;

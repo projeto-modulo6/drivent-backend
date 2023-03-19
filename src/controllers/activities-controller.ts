@@ -43,3 +43,14 @@ export async function getAllLocales(req: AuthenticatedRequest, res: Response) {
     return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
   }
 }
+
+export async function getUserActivityByActivityId(req: AuthenticatedRequest, res: Response) {
+  let { activityId } = req.params;
+  try {
+    const userActivities = await activityService.getUserActivitiesByActivityId(Number(activityId));
+    return res.status(httpStatus.OK).send(userActivities);
+  } catch (error) {
+    console.log(error.message);
+    return res.sendStatus(httpStatus.NOT_FOUND);
+  }
+}
