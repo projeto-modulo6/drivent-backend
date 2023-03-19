@@ -41,7 +41,7 @@ async function getLocales(): Promise<local[]> {
 }
 
 async function getUserActivitiesByActivityId(activityId: number){
-    const userActivities = await activityRepository.findUserActivitiesByActivityId(activityId);
+    const userActivities = await activityRepository.findUserActivitiesByActivityId(Number(activityId));
     if(!userActivities){
         throw notFoundError();
     }
