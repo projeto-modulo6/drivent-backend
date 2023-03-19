@@ -85,6 +85,15 @@ async function findActivitiesByDayAndLocale(dateId: number, localeId: number): P
   });
 }
 
+async function findUserActivitiesByActivityId(activityId: number) {
+  const data = await prisma.user_activity.findMany({
+    where: {
+      activity_id: Number(activityId),
+    },
+  });
+  return data;
+}
+
 const activityRepository = {
   findActivityById,
   findAllDates,
@@ -93,6 +102,7 @@ const activityRepository = {
   createUserActivity,
   findUserActivityByUserId,
   findAllLocales,
+  findUserActivitiesByActivityId,
 };
 
 export default activityRepository;
