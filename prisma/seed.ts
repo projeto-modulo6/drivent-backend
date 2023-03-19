@@ -336,8 +336,8 @@ async function main() {
         },
       ],
     });
+    newUserActFull();
   }
-  newUserActFull();
 
   console.log({ event }, " ", ticketTypes);
 }
