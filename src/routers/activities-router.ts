@@ -1,4 +1,4 @@
-import { getActivityById, getAllDates, getDayActivitiesByLocale, createUserActivity } from "@/controllers/activities-controller";
+import { getActivityById, getAllDates, getDayActivitiesByLocale, createUserActivity, getAllLocales } from "@/controllers/activities-controller";
 import { authenticateToken } from "@/middlewares";
 import { Router } from "express";
 
@@ -10,5 +10,7 @@ activitiesRouter
   .get("/:activityId", getActivityById)
   .get("/locale/:dayId/:localeId", getDayActivitiesByLocale)
   .post("/:activityId", createUserActivity)
+  .get("/allLocales", getAllLocales)
+  .get("/:activityId", getActivityById);
 
 export { activitiesRouter };
