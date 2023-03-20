@@ -1,4 +1,28 @@
 import { prisma } from "@/config";
+import { user_activity } from "@prisma/client";
+
+type CreateParams = Omit<user_activity, "id" | "createdAt" | "updatedAt">;
+
+async function createUserActivity(user_id: number, activity_id: number){
+
+    return await prisma.user_activity.create({
+        data: {
+            activity_id,
+            user_id
+        }
+    })
+}
+
+async function findUserActivityByUserId(userId: number, activityId: number){
+
+  return await prisma.user_activity.findFirst({
+    where:{
+      activity_id: activityId,
+      user_id: userId,
+    }
+  })
+
+}
 import { activity, local } from "@prisma/client";
 
 async function findActivityById(activityId: number) {
@@ -71,13 +95,24 @@ async function findUserActivitiesByActivityId(activityId: number) {
   return data;
 }
 
+async function deleteUserActivity(id: number){
+  return await prisma.user_activity.delete({
+    where: {
+      id: id
+    }
+  })
+}
+
 const activityRepository = {
   findActivityById,
   findAllDates,
   findAllLocalsWithActivity,
   findActivitiesByDayAndLocale,
+  createUserActivity,
+  findUserActivityByUserId,
   findAllLocales,
   findUserActivitiesByActivityId,
+  deleteUserActivity
 };
 
 export default activityRepository;
