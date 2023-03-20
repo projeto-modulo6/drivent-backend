@@ -5,7 +5,8 @@ import {
   getAllLocales,
   getDayActivitiesByLocale,
   getUserActivityByActivityId,
-  createUserActivity
+  createUserActivity,
+  deletingUserActivityById
 } from "@/controllers/activities-controller";
 import { authenticateToken } from "@/middlewares";
 import { Router } from "express";
@@ -15,11 +16,12 @@ const activitiesRouter = Router();
 activitiesRouter
   .all("/*", authenticateToken)
   .get("/dates", getAllDates)
+  .get("/allLocales", getAllLocales)
+  .post("/:activityId", createUserActivity)
   .get("/:activityId", getActivityById)
   .get("/locale/:dayId/:localeId", getDayActivitiesByLocale)
-  .post("/:activityId", createUserActivity)
-  .get("/allLocales", getAllLocales)
   .get("/:activityId", getActivityById)
-  .get("/useractivity/:activityId", getUserActivityByActivityId);
+  .get("/useractivity/:activityId", getUserActivityByActivityId)
+  .delete("/:userActivityId", deletingUserActivityById)
 
 export { activitiesRouter };

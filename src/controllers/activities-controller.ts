@@ -23,10 +23,11 @@ export async function getAllDates(req: AuthenticatedRequest, res: Response) {
 }
 
 export async function getDayActivitiesByLocale(req: AuthenticatedRequest, res: Response) {
+  const { userId } = req;
   const { dayId, localeId } = req.params;
   try {
     const activities = await activityService.getDayActivitiesByLocale(Number(dayId), Number(localeId));
-    return res.status(httpStatus.OK).send(activities);
+    return res.status(httpStatus.OK).send({activities: activities, userId: Number(userId)});
   } catch (err) {
     if (err.name === "RequestError") {
       return res.status(httpStatus.BAD_REQUEST).send(err.message);
@@ -43,7 +44,7 @@ export async function createUserActivity(req: AuthenticatedRequest, res: Respons
 
   try {
     const create = await activityService.creatingUserActivity(Number(userId), Number(activityId));
-    return res.status(httpStatus.OK).send(create.id)
+    return res.status(httpStatus.OK).send({id: create.id, userId: create.user_id, activityId: create.activity_id})
   } catch (error) {
     if(error.name === "ConflictError"){
       return res.status(httpStatus.CONFLICT).send(error.message)
@@ -68,9 +69,24 @@ export async function getUserActivityByActivityId(req: AuthenticatedRequest, res
   let { activityId } = req.params;
   try {
     const userActivities = await activityService.getUserActivitiesByActivityId(Number(activityId));
+    
     return res.status(httpStatus.OK).send(userActivities);
   } catch (error) {
     console.log(error.message);
     return res.sendStatus(httpStatus.NOT_FOUND);
+  }
+}
+
+export async function deletingUserActivityById(req: AuthenticatedRequest, res: Response){
+  const id = req.params.userActivityId
+  try {
+    const response = await activityService.removeUserActivity(Number(id));
+    return res.status(httpStatus.OK).send(response);
+  } catch (error) {
+    if(error.name = "NotFoundError"){
+      console.log('CAIU KKKKKKKKKKK')
+      return res.sendStatus(httpStatus.NOT_FOUND)
+    }
+    return res.status(httpStatus.BAD_REQUEST).send(error)
   }
 }

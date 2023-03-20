@@ -12,7 +12,7 @@ async function getActivityById(activityId: number) {
 
 async function creatingUserActivity(userId: number, activityId: number){
 
-  const verifyByUserId = await activityRepository.findUserActivityByUserId(userId);
+  const verifyByUserId = await activityRepository.findUserActivityByUserId(userId, activityId);
 
   if(verifyByUserId){
     throw conflictError("This user is already registered with this activity")
@@ -72,6 +72,15 @@ async function getUserActivitiesByActivityId(activityId: number){
     return userActivities;
 }
 
+async function removeUserActivity(id: number){
+  const verify = activityRepository.findUserActivitiesByActivityId(id)
+  if(!verify){
+    throw notFoundError()
+  }
+  const deletar = await activityRepository.deleteUserActivity(id) 
+  return deletar
+}
+
 const activityService = {
   getActivityById,
   getDates,
@@ -79,7 +88,8 @@ const activityService = {
   getDayActivitiesByLocale,
   creatingUserActivity,
   getLocales,
-  getUserActivitiesByActivityId
+  getUserActivitiesByActivityId,
+  removeUserActivity
 };
 
 export default activityService;

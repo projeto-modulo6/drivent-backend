@@ -13,11 +13,12 @@ async function createUserActivity(user_id: number, activity_id: number){
     })
 }
 
-async function findUserActivityByUserId(userId: number){
+async function findUserActivityByUserId(userId: number, activityId: number){
 
   return await prisma.user_activity.findFirst({
     where:{
-      user_id: userId
+      activity_id: activityId,
+      user_id: userId,
     }
   })
 
@@ -94,6 +95,14 @@ async function findUserActivitiesByActivityId(activityId: number) {
   return data;
 }
 
+async function deleteUserActivity(id: number){
+  return await prisma.user_activity.delete({
+    where: {
+      id: id
+    }
+  })
+}
+
 const activityRepository = {
   findActivityById,
   findAllDates,
@@ -103,6 +112,7 @@ const activityRepository = {
   findUserActivityByUserId,
   findAllLocales,
   findUserActivitiesByActivityId,
+  deleteUserActivity
 };
 
 export default activityRepository;
