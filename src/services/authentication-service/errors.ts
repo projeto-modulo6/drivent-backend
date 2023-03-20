@@ -6,3 +6,10 @@ export function invalidCredentialsError(): ApplicationError {
     message: "email or password are incorrect",
   };
 }
+
+export function invalidGitHubToken(): ApplicationError {
+  return {
+    name: "InvalidGitHubToken",
+    message: "The token is incorrect",
+  };
+}
