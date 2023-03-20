@@ -16,8 +16,6 @@ async function main() {
     });
   }
 
-  console.log(new Date("10:00:00"));
-
   let types = await prisma.ticketType.findMany();
   let ticketTypes = {};
   if (types.length === 0) {
@@ -51,17 +49,17 @@ async function main() {
       data: [
         {
           id: 1,
-          name: "Sexta",
+          name: "Quinta",
           date: new Date("2023-03-31"),
         },
         {
           id: 2,
-          name: "Sábado",
+          name: "Sexta",
           date: new Date("2023-04-01"),
         },
         {
           id: 3,
-          name: "Domingo",
+          name: "Sábado",
           date: new Date("2023-04-02"),
         },
       ],
@@ -98,88 +96,88 @@ async function main() {
           name: "Minecraft: montando o PC ideal",
           local_id: 1,
           date_id: 1,
-          begin: new Date("2023-03-31 06:00:00"),
-          end: new Date("2023-03-31 07:00:00"),
-          seats: 30,
+          begin: new Date("2023-03-31 09:00:00"),
+          end: new Date("2023-03-31 10:00:00"),
+          seats: 1,
         },
         {
           name: "Lol: montando o PC ideal",
           local_id: 1,
           date_id: 1,
-          begin: new Date("2023-03-31 07:00:00"),
-          end: new Date("2023-03-31 08:00:00"),
+          begin: new Date("2023-03-31 10:00:00"),
+          end: new Date("2023-03-31 11:00:00"),
           seats: 30,
         },
         {
           name: "Doom: montando o PC ideal",
           local_id: 1,
           date_id: 1,
-          begin: new Date("2023-03-31 08:00:00"),
-          end: new Date("2023-03-31 10:00:00"),
+          begin: new Date("2023-03-31 11:00:00"),
+          end: new Date("2023-03-31 12:00:00"),
           seats: 30,
         },
         {
           name: "Palestra A",
           local_id: 2,
           date_id: 1,
-          begin: new Date("2023-03-31 06:00:00"),
-          end: new Date("2023-03-31 07:00:00"),
+          begin: new Date("2023-03-31 09:00:00"),
+          end: new Date("2023-03-31 10:00:00"),
           seats: 30,
         },
         {
           name: "Palestra B",
           local_id: 3,
           date_id: 1,
-          begin: new Date("2023-03-31 06:00:00"),
-          end: new Date("2023-03-31 07:00:00"),
+          begin: new Date("2023-03-31 09:00:00"),
+          end: new Date("2023-03-31 10:00:00"),
           seats: 30,
         },
         {
           name: "Palestra C",
           local_id: 3,
           date_id: 1,
-          begin: new Date("2023-03-31 07:00:00"),
-          end: new Date("2023-03-31 09:00:00"),
+          begin: new Date("2023-03-31 10:00:00"),
+          end: new Date("2023-03-31 12:00:00"),
           seats: 30,
         },
         {
           name: "Palestra D",
           local_id: 2,
           date_id: 2,
-          begin: new Date("2023-04-01 06:00:00"),
-          end: new Date("2023-04-01 07:00:00"),
+          begin: new Date("2023-04-01 09:00:00"),
+          end: new Date("2023-04-01 10:00:00"),
           seats: 30,
         },
         {
           name: "Palestra E",
           local_id: 2,
           date_id: 2,
-          begin: new Date("2023-04-01 07:00:00"),
-          end: new Date("2023-04-01 08:00:00"),
+          begin: new Date("2023-04-01 10:00:00"),
+          end: new Date("2023-04-01 11:00:00"),
           seats: 30,
         },
         {
           name: "Palestra F",
           local_id: 1,
           date_id: 3,
-          begin: new Date("2023-04-02 06:00:00"),
-          end: new Date("2023-04-02 07:00:00"),
+          begin: new Date("2023-04-02 09:00:00"),
+          end: new Date("2023-04-02 10:00:00"),
           seats: 30,
         },
         {
           name: "Palestra G",
           local_id: 2,
           date_id: 3,
-          begin: new Date("2023-04-02 06:00:00"),
-          end: new Date("2023-04-02 07:00:00"),
+          begin: new Date("2023-04-02 09:00:00"),
+          end: new Date("2023-04-02 10:00:00"),
           seats: 30,
         },
         {
           name: "Palestra H",
           local_id: 3,
           date_id: 3,
-          begin: new Date("2023-04-02 06:00:00"),
-          end: new Date("2023-04-02 07:00:00"),
+          begin: new Date("2023-04-02 09:00:00"),
+          end: new Date("2023-04-02 10:00:00"),
           seats: 30,
         },
       ],
@@ -271,72 +269,6 @@ async function main() {
         ],
       });
     }
-  }
-
-  let userActivities = await prisma.user_activity.findFirst();
-  let newUserActivities = {};
-  if (!userActivities) {
-    newUserActivities = await prisma.user_activity.createMany({
-      data: [
-        {
-          activity_id: 1,
-          user_id: 1,
-        },
-        {
-          activity_id: 1,
-          user_id: 1,
-        },
-        {
-          activity_id: 1,
-          user_id: 1,
-        },
-        {
-          activity_id: 1,
-          user_id: 1,
-        },
-        {
-          activity_id: 1,
-          user_id: 1,
-        },
-        {
-          activity_id: 1,
-          user_id: 1,
-        },
-        {
-          activity_id: 1,
-          user_id: 1,
-        },
-        {
-          activity_id: 2,
-          user_id: 1,
-        },
-        {
-          activity_id: 2,
-          user_id: 1,
-        },
-        {
-          activity_id: 2,
-          user_id: 1,
-        },
-        {
-          activity_id: 2,
-          user_id: 1,
-        },
-        {
-          activity_id: 3,
-          user_id: 1,
-        },
-        {
-          activity_id: 3,
-          user_id: 1,
-        },
-        {
-          activity_id: 3,
-          user_id: 1,
-        },
-      ],
-    });
-    newUserActFull();
   }
 
   console.log({ event }, " ", ticketTypes);
