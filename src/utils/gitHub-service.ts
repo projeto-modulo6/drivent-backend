@@ -1,7 +1,7 @@
 import { request } from "./request";
 import qs from "query-string";
 
-async function exchangeCodeForAccessToken(code: string) {
+async function exchangeCodeForAccessToken(code: string): Promise<string> {
   const GITHUB_ACCESS_TOKEN_URL = "https://github.com/login/oauth/access_token";
   const { REDIRECT_URL, CLIENT_ID, CLIENT_SECRET } = process.env;
   const params = {
@@ -21,7 +21,18 @@ async function exchangeCodeForAccessToken(code: string) {
   const { data } = await request.post(GITHUB_ACCESS_TOKEN_URL, params, config);
 
   const parsedData = qs.parse(data);
-  return parsedData.access_token;
+  const token = parsedData.access_token as string;
+  return token;
 }
 
-export { exchangeCodeForAccessToken };
+async function fetchUser(token: string) {
+  const response = await request.get("https://api.github.com/user", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+}
+
+export { exchangeCodeForAccessToken, fetchUser };
